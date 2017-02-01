@@ -32,29 +32,29 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use('/css', express.static(__dirname + '/src/css'));
 
 // Disable logging until startup, so that we can catch errors and display them nicely.
-// app.use(stormpath.init(app, {
-//   debug: 'none',
-//   web: {
-//     produces: ['application/json'],
-//     me: {
-//       expand: {
-//         customData: true
-//       }
-//     },
-//     register: {
-//       form: {
-//         fields: {
-//           color: {
-//             enabled: true,
-//             label: 'Color',
-//             placeholder: 'E.g. blue',
-//             type: 'text'
-//           }
-//         }
-//       }
-//     }
-//   }
-// }));
+app.use(stormpath.init(app, {
+  debug: 'none',
+  web: {
+    produces: ['application/json'],
+    me: {
+      expand: {
+        customData: true
+      }
+    },
+    register: {
+      form: {
+        fields: {
+          color: {
+            enabled: true,
+            label: 'Color',
+            placeholder: 'E.g. blue',
+            type: 'text'
+          }
+        }
+      }
+    }
+  }
+}));
 
 app.post('/me', bodyParser.json(), stormpath.loginRequired, function (req, res) {
   function writeError(message) {
@@ -104,31 +104,31 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'src/html/index.html'));
 });
 
-// spinner.text = 'Starting Dev Server on port ' + port,
-// spinner.start();
+spinner.text = 'Starting Dev Server on port ' + port,
+spinner.start();
 
-// app.on('error', failAndExit);
-// app.on('stormpath.error', failAndExit);
+app.on('error', failAndExit);
+app.on('stormpath.error', failAndExit);
 
-// app.listen(port, function () {
-//   spinner.succeed();
-//   spinner.text = 'Initializing Stormpath';
-//   spinner.start();
-//   app.on('stormpath.ready', function () {
-//     spinner.succeed();
-//     console.log('\nListening at http://localhost:' + port);
-//     // Now bring back error logging.
-//     app.get('stormpathLogger').transports.console.level = 'error';
-//   });
-// });
-
-
+app.listen(port, function () {
+  spinner.succeed();
+  spinner.text = 'Initializing Stormpath';
+  spinner.start();
+  app.on('stormpath.ready', function () {
+    spinner.succeed();
+    console.log('\nListening at http://localhost:' + port);
+    // Now bring back error logging.
+    app.get('stormpathLogger').transports.console.level = 'error';
+  });
+});
 
 
 
-app.listen(port, function() {
-  console.log('Server running at localhost:' + port)
-})
+
+
+// app.listen(port, function() {
+//   console.log('Server running at localhost:' + port)
+// })
 
 
 
